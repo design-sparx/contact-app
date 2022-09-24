@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react'
+import './App.css'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { MantineProvider } from '@mantine/core'
+import { HomePage, LoginPage, RegisterPage } from './pages'
+import ProtectedRoutes from './components/ProtectedRoutes'
+import { useDispatch } from 'react-redux'
+import { auth } from './firebase'
+import { setUser } from './redux/actions'
 
-function App() {
+const App = (): JSX.Element => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    auth.onAuthStateChanged(authUser => {
+      if (authUser != null) {
+        dispatch(setUser(authUser))
+      } else {
+        dispatch(setUser(null))
+      }
+    })
+  }, [dispatch])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <MantineProvider withNormalizeCSS withGlobalStyles>
+        <Routes>
+          <Route path="/" element={<ProtectedRoutes><HomePage/></ProtectedRoutes>}/>
+          <Route path="/login" element={<LoginPage/>}/>
+          <Route path="/register" element={<RegisterPage/>}/>
+        </Routes>
+      </MantineProvider>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
