@@ -1,8 +1,16 @@
 import * as types from './actionTypes'
-import { createUserWithEmailAndPassword, updateProfile, User, signInWithEmailAndPassword, signOut } from 'firebase/auth'
-import { auth } from '../firebase'
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  User,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  signOut
+} from 'firebase/auth'
+import { auth, facebookAuthProvider, googleAuthProvider } from '../firebase'
 import { SignupTypes } from '../constants/Signup'
 
+// register / signup
 const registerStart = (): any => ({
   type: types.REGISTER_START
 })
@@ -17,6 +25,7 @@ const registerFail = (error: any): any => ({
   payload: error
 })
 
+// signin / login
 const loginStart = (): any => ({
   type: types.LOGIN_START
 })
@@ -31,6 +40,7 @@ const loginFail = (error: any): any => ({
   payload: error
 })
 
+// logout / signout
 const logoutStart = (): any => ({
   type: types.LOGOUT_START
 })
@@ -49,6 +59,42 @@ export const setUser = (user: User | null): any => ({
   payload: user
 })
 
+// google sign in
+const googleSignInStart = (): any => ({
+  type: types.GOOGLE_SIGN_IN_START
+})
+
+const googleSignInSuccess = (user: User): any => ({
+  type: types.GOOGLE_SIGN_IN_SUCCESS,
+  payload: user
+})
+
+const googleSignInFail = (error: any): any => ({
+  type: types.GOOGLE_SIGN_IN_FAIL,
+  payload: error
+})
+
+// facebook sign in
+const fbSignInStart = (): any => ({
+  type: types.FB_SIGN_IN_START
+})
+
+const fbSignInSuccess = (user: User): any => ({
+  type: types.FB_SIGN_IN_SUCCESS,
+  payload: user
+})
+
+const fbSignInFail = (error: any): any => ({
+  type: types.FB_SIGN_IN_FAIL,
+  payload: error
+})
+
+/**
+ * initialize registration
+ * @param email
+ * @param password
+ * @param displayName
+ */
 export const registerInitiate = ({
   email,
   password,
@@ -72,6 +118,11 @@ export const registerInitiate = ({
   }
 }
 
+/**
+ * initialize login
+ * @param email
+ * @param password
+ */
 export const loginInitiate = ({
   email,
   password
@@ -89,6 +140,9 @@ export const loginInitiate = ({
   }
 }
 
+/**
+ * initialize logout
+ */
 export const logoutInitiate = () => {
   return function (dispatch: any) {
     dispatch(logoutStart())
@@ -98,6 +152,40 @@ export const logoutInitiate = () => {
       })
       .catch((error) => {
         dispatch(logoutFail(error.message))
+      })
+  }
+}
+
+/**
+ * initialize google sign in
+ */
+export const googleSignInInitiate = () => {
+  return function (dispatch: any) {
+    dispatch(googleSignInStart())
+    signInWithPopup(auth, googleAuthProvider)
+      .then(({ user }) => {
+        // Signed in
+        dispatch(googleSignInSuccess(user))
+      })
+      .catch((error) => {
+        dispatch(googleSignInFail(error.message))
+      })
+  }
+}
+
+/**
+ * initialize facebook sign in
+ */
+export const fbSignInInitiate = () => {
+  return function (dispatch: any) {
+    dispatch(fbSignInStart())
+    signInWithPopup(auth, facebookAuthProvider.addScope('user_birthday, email'))
+      .then(({ user }) => {
+        // Signed in
+        dispatch(fbSignInSuccess(user))
+      })
+      .catch((error) => {
+        dispatch(fbSignInFail(error.message))
       })
   }
 }

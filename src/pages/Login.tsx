@@ -15,7 +15,7 @@ import {
 import { SignupTypes } from '../constants/Signup'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { loginInitiate } from '../redux/actions'
+import { fbSignInInitiate, googleSignInInitiate, loginInitiate } from '../redux/actions'
 
 const Login = (props: PaperProps): JSX.Element => {
   const { currentUser } = useSelector((state: any) => state.user)
@@ -57,11 +57,11 @@ const Login = (props: PaperProps): JSX.Element => {
   }
 
   const handleGoogleSubmit = (): void => {
-    console.log('')
+    dispatch(googleSignInInitiate() as any)
   }
 
   const handleFacebookSubmit = (): void => {
-    console.log('')
+    dispatch(fbSignInInitiate() as any)
   }
 
   return (
