@@ -9,6 +9,8 @@ import { auth } from './firebase'
 import { setUser } from './redux/actions'
 import AppHeader from './components/AppHeader'
 import { AppHeaderLinks } from './mocks/AppHeaderLinks'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const App = (): JSX.Element => {
   const dispatch = useDispatch()
@@ -27,6 +29,7 @@ const App = (): JSX.Element => {
     <BrowserRouter>
       <MantineProvider withNormalizeCSS withGlobalStyles>
         <AppHeader links={AppHeaderLinks.links}/>
+        <ToastContainer />
         <Routes>
           <Route path="/" element={<ProtectedRoutes><HomePage/></ProtectedRoutes>}/>
           <Route path="/login" element={<LoginPage/>}/>

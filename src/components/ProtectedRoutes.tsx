@@ -11,7 +11,6 @@ const ProtectedRoutes = ({ children }: ProtectedRoutesProps): any => {
   const { currentUser } = useSelector((state: any) => state.user)
   const { pathname } = useLocation()
   const [requestedLocation, setRequestedLocation] = useState<string | null>(null)
-
   if (!Boolean(currentUser)) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname)
