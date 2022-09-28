@@ -35,6 +35,7 @@ const App = (): JSX.Element => {
           <Route path="/login" element={<LoginPage/>}/>
           <Route path="/register" element={<RegisterPage/>}/>
           <Route path="/addContact" element={<ProtectedRoutes><AddEditPage/></ProtectedRoutes>}/>
+          <Route path="/update/:id" element={<ProtectedRoutes><AddEditPage/></ProtectedRoutes>}/>
           <Route path="/about" element={<AboutPage/>}/>
         </Routes>
       </MantineProvider>
