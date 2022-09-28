@@ -5,7 +5,6 @@ import { get, ref, child, remove } from 'firebase/database'
 import { ContactTypes } from '../constants/Contact'
 import { IconExclamationMark } from '@tabler/icons'
 import { toast } from 'react-toastify'
-import { Link } from 'react-router-dom'
 
 const Home = (): JSX.Element => {
   const [contacts, setContacts] = useState<ContactTypes[]>([])
@@ -79,16 +78,24 @@ const Home = (): JSX.Element => {
               <td>
                 <Group>
                   <Button
-                    component={Link}
+                    component='a'
                     type="button"
                     color="dimmed"
-                    to={`/update/${String(c.id)}`}
+                    href={`/view/${String(c.id)}`}
+                    compact
+                  >
+                    view
+                  </Button>
+                  <Button
+                    component='a'
+                    type="button"
+                    color="dimmed"
+                    href={`/update/${String(c.id)}`}
                     compact
                   >
                     edit
                   </Button>
                   <Button compact onClick={() => handleOpen(c)}>delete</Button>
-                  <Button compact>view</Button>
                 </Group>
               </td>
             </tr>

@@ -84,7 +84,7 @@ const AddEdit = (): JSX.Element => {
   }, [id])
 
   return (
-    <Container size={420} my={40}>
+    <Container>
       <Paper radius="md" p="xl">
         <Title order={3} align="center" mb="xl">create contact form</Title>
         <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
