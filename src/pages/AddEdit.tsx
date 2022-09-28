@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Container, Paper, Stack, TextInput, Title } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { ContactTypes } from '../constants/Contact'
-import { ref, set } from 'firebase/database'
+import { ref, set, push } from 'firebase/database'
 import { db } from '../firebase'
 import { toast } from 'react-toastify'
 
@@ -33,7 +33,9 @@ const AddEdit = (): JSX.Element => {
     if (!Boolean(contact) || !Boolean(name) || !Boolean(email)) {
       toast.warning('Please provide value to each input field!')
     } else {
-      set(ref(db, 'contacts/' + `${name}-${contact}`), values)
+      const contactsRef = ref(db, 'contacts')
+      const newContactsRef = push(contactsRef)
+      set(newContactsRef, values)
         .then(() => {
           toast.success('Contact added successfully')
           form.reset()

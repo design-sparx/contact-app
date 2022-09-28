@@ -1,28 +1,70 @@
-import React from 'react'
-import { Button } from '@mantine/core'
-import { useDispatch, useSelector } from 'react-redux'
-import { logoutInitiate } from '../redux/actions'
-// import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Anchor, Button, Container, Group, Table } from '@mantine/core'
+import { db } from '../firebase'
+import { get, ref, child } from 'firebase/database'
+import { ContactTypes } from '../constants/Contact'
 
 const Home = (): JSX.Element => {
-  const { currentUser } = useSelector((state: any) => state.user)
-  const dispatch = useDispatch()
-  // const navigate = useNavigate()
+  const [contacts, setContacts] = useState<ContactTypes[]>([])
+  const dbRef = ref(db)
 
-  const handleAuth = (): void => {
-    if (Boolean(currentUser)) {
-      dispatch(logoutInitiate() as any)
-      // navigate('/login')
-    }
+  const fetchContacts = (): void => {
+    get(child(dbRef, 'contacts'))
+      .then((snapshot) => {
+        const d: ContactTypes[] = []
+        snapshot.forEach((childSnapshot) => {
+          d.push({
+            ...childSnapshot.val(),
+            id: childSnapshot.key
+          })
+        })
+        setContacts(d)
+      })
+      .catch(err => console.log(err))
   }
 
+  useEffect(() => {
+    fetchContacts()
+  }, [])
+
   return (
-    <div>
+    <Container>
       <h1>welcome to our app</h1>
-      <Button onClick={handleAuth}>
-        logout
-      </Button>
-    </div>
+      <Table>
+        <thead>
+        <tr>
+          <th>No.</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Contact</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>{
+          contacts?.map((c, i) => {
+            return <tr key={i}>
+              <td>{i + 1}</td>
+              <td>{c.name}</td>
+              <td>{c.email}</td>
+              <td>{c.contact}</td>
+              <td>
+                <Group>
+                  <Anchor<'a'>
+                    type="button"
+                    color="dimmed"
+                    size="xs"
+                    href={`/update/${String(c.id)}`}
+                  >
+                    edit
+                  </Anchor>
+                  <Button size="xs">delete</Button>
+                </Group>
+              </td>
+            </tr>
+          })
+        }</tbody>
+      </Table>
+    </Container>
   )
 }
 

@@ -100,8 +100,6 @@ const AppHeader = ({ links }: HeaderActionProps): JSX.Element => {
       {link.label}
     </a>)
 
-  console.log(currentUser)
-
   return (
     <Header height={HEADER_HEIGHT} sx={{ borderBottom: 0 }} mb={120}>
       <Container className={classes.inner} fluid>
