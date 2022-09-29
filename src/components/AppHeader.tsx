@@ -127,29 +127,30 @@ const AppHeader = ({ links }: HeaderActionProps): JSX.Element => {
           <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm"/>
           <IconCode size={28}/>
         </Group>
-        <form onSubmit={handleSearch}>
-          <TextInput
-            icon={<IconSearch size={18} stroke={1.5}/>}
-            radius="xl"
-            size="md"
-            rightSection={
-              <ActionIcon size={32} radius="xl" color={theme.primaryColor} variant="filled">
-                {theme.dir === 'ltr'
-                  ? (
-                  <IconArrowRight size={18} stroke={1.5}/>
-                    )
-                  : (
-                  <IconArrowLeft size={18} stroke={1.5}/>
-                    )}
-              </ActionIcon>
-            }
-            placeholder="Search contacts"
-            rightSectionWidth={42}
-            width={500}
-            onChange={(evt) => setSearch(evt.currentTarget.value)}
-            value={search}
-          />
-        </form>
+        {(Boolean(currentUser)) &&
+          <form onSubmit={handleSearch}>
+            <TextInput
+              icon={<IconSearch size={18} stroke={1.5}/>}
+              radius="xl"
+              size="md"
+              rightSection={
+                <ActionIcon size={32} radius="xl" color={theme.primaryColor} variant="filled">
+                  {theme.dir === 'ltr'
+                    ? (
+                    <IconArrowRight size={18} stroke={1.5}/>)
+                    : (
+                      <IconArrowLeft size={18} stroke={1.5}/>
+                      )}
+                </ActionIcon>
+              }
+              placeholder="Search contacts"
+              rightSectionWidth={42}
+              width={500}
+              onChange={(evt) => setSearch(evt.currentTarget.value)}
+              value={search}
+            />
+          </form>
+        }
         <Group spacing={5} className={classes.links}>
           {items}
           {Boolean(currentUser)
