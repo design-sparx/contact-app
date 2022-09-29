@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { MantineProvider } from '@mantine/core'
-import { AboutPage, AddEditPage, HomePage, LoginPage, RegisterPage, ViewPage } from './pages'
+import { AboutPage, AddEditPage, HomePage, LoginPage, RegisterPage, SearchPage, ViewPage } from './pages'
 import ProtectedRoutes from './components/ProtectedRoutes'
 import { useDispatch } from 'react-redux'
 import { auth } from './firebase'
@@ -37,6 +37,7 @@ const App = (): JSX.Element => {
           <Route path="/addContact" element={<ProtectedRoutes><AddEditPage/></ProtectedRoutes>}/>
           <Route path="/update/:id" element={<ProtectedRoutes><AddEditPage/></ProtectedRoutes>}/>
           <Route path="/view/:id" element={<ProtectedRoutes><ViewPage/></ProtectedRoutes>}/>
+          <Route path="/search" element={<ProtectedRoutes><SearchPage/></ProtectedRoutes>}/>
           <Route path="/about" element={<AboutPage/>}/>
         </Routes>
       </MantineProvider>

@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   createStyles,
   Header,
   Container,
   Group,
   Button,
-  Burger
+  Burger,
+  TextInput,
+  ActionIcon
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { IconCode } from '@tabler/icons'
-import { useLocation } from 'react-router-dom'
+import { IconArrowLeft, IconArrowRight, IconCode, IconSearch } from '@tabler/icons'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutInitiate } from '../redux/actions'
 
@@ -72,9 +74,14 @@ interface HeaderActionProps {
 }
 
 const AppHeader = ({ links }: HeaderActionProps): JSX.Element => {
-  const { classes } = useStyles()
+  const {
+    classes,
+    theme
+  } = useStyles()
   const [opened, { toggle }] = useDisclosure(false)
+  const [search, setSearch] = useState('')
   const location = useLocation()
+  const navigate = useNavigate()
   const { currentUser } = useSelector((state: any) => ({ ...state.user }))
   const dispatch = useDispatch()
 
@@ -91,6 +98,9 @@ const AppHeader = ({ links }: HeaderActionProps): JSX.Element => {
     return location.pathname === href
   }
 
+  /**
+   * nav links
+   */
   const items = links.map((link) =>
     <a
       key={link.label}
@@ -98,7 +108,17 @@ const AppHeader = ({ links }: HeaderActionProps): JSX.Element => {
       className={urlResolver(link.link) ? classes.active : classes.link}
     >
       {link.label}
-    </a>)
+    </a>
+  )
+
+  /**
+   * search
+   */
+  const handleSearch = (evt: React.SyntheticEvent): void => {
+    evt.preventDefault()
+    navigate(`/search?name=${search}`)
+    setSearch('')
+  }
 
   return (
     <Header height={HEADER_HEIGHT} sx={{ borderBottom: 0 }} mb={120}>
@@ -107,6 +127,29 @@ const AppHeader = ({ links }: HeaderActionProps): JSX.Element => {
           <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm"/>
           <IconCode size={28}/>
         </Group>
+        <form onSubmit={handleSearch}>
+          <TextInput
+            icon={<IconSearch size={18} stroke={1.5}/>}
+            radius="xl"
+            size="md"
+            rightSection={
+              <ActionIcon size={32} radius="xl" color={theme.primaryColor} variant="filled">
+                {theme.dir === 'ltr'
+                  ? (
+                  <IconArrowRight size={18} stroke={1.5}/>
+                    )
+                  : (
+                  <IconArrowLeft size={18} stroke={1.5}/>
+                    )}
+              </ActionIcon>
+            }
+            placeholder="Search contacts"
+            rightSectionWidth={42}
+            width={500}
+            onChange={(evt) => setSearch(evt.currentTarget.value)}
+            value={search}
+          />
+        </form>
         <Group spacing={5} className={classes.links}>
           {items}
           {Boolean(currentUser)
