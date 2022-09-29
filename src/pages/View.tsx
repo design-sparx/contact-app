@@ -5,10 +5,11 @@ import { db } from '../firebase'
 import { Container, Paper, Text, Title } from '@mantine/core'
 import { ContactTypes } from '../constants/Contact'
 
-const initialState = {
+const initialState: ContactTypes = {
   name: '',
   email: '',
-  contact: ''
+  contact: '',
+  status: ''
 }
 
 const View = (): JSX.Element => {
@@ -41,6 +42,7 @@ const View = (): JSX.Element => {
         <Text>ID: {state.id}</Text>
         <Text>Name: {state.name}</Text>
         <Text>Email: {state.email}</Text>
+        <Text>Status: {state.status}</Text>
         <Text>Contact: {state.contact}</Text>
       </Paper>
     </Container>

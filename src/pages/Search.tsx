@@ -15,6 +15,9 @@ const Search = (): JSX.Element => {
   const queryParam = useQuery()
   const search = queryParam.get('name')
 
+  /**
+   * search
+   */
   const searchData = (): any => {
     const q = query(ref(db, 'contacts'), orderByChild('name'), equalTo(search))
     get(q)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Container, Paper, Stack, TextInput, Title } from '@mantine/core'
+import { Button, Container, Paper, Select, Stack, TextInput, Title } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { ContactTypes } from '../constants/Contact'
 import { ref, set, push, get, child } from 'firebase/database'
@@ -7,11 +7,13 @@ import { db } from '../firebase'
 import { toast } from 'react-toastify'
 import { useNavigate, useParams } from 'react-router-dom'
 
-const initialState = {
+const initialState: ContactTypes = {
   name: '',
   email: '',
-  contact: ''
+  contact: '',
+  status: ''
 }
+
 const AddEdit = (): JSX.Element => {
   const dbRef = ref(db)
   const { id } = useParams()
@@ -22,7 +24,8 @@ const AddEdit = (): JSX.Element => {
     validate: {
       name: (value) => (value.length > 2 ? null : 'Name must have at least 2 letters'),
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      contact: (value) => (value.length > 2 ? null : 'Name must have at least 2 digits')
+      contact: (value) => (value.length > 2 ? null : 'Name must have at least 2 digits'),
+      status: (value: string) => ((Boolean(value)) ? null : 'Select contact status')
     }
   })
 
@@ -30,10 +33,11 @@ const AddEdit = (): JSX.Element => {
     const {
       contact,
       name,
-      email
+      email,
+      status
     } = values
     if (!Boolean(id)) {
-      if (!Boolean(contact) || !Boolean(name) || !Boolean(email)) {
+      if (!Boolean(contact) || !Boolean(name) || !Boolean(email) || !Boolean(status)) {
         toast.warning('Please provide value to each input field!')
       } else {
         const contactsRef = ref(db, 'contacts')
@@ -115,6 +119,18 @@ const AddEdit = (): JSX.Element => {
               value={form.values.contact}
               onChange={(event) => form.setFieldValue('contact', event.currentTarget.value)}
               {...form.getInputProps('contact')}
+            />
+            <Select
+              required
+              withAsterisk={false}
+              label="Status"
+              placeholder="select status"
+              data={[
+                { value: 'active', label: 'active' },
+                { value: 'inactive', label: 'inactive' }
+              ]}
+              value={form.values.status}
+              {...form.getInputProps('status')}
             />
             <Button type="submit" fullWidth>{Boolean(id) ? 'Update' : 'Save'}</Button>
           </Stack>
